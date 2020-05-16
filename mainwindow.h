@@ -40,6 +40,8 @@ public:
     void service();
     void angleDeTir();
     void entrePoint();
+    void finDePartie();
+    void recommencerLaMemePartie();
     QString servicePour();
 
 public slots:
@@ -77,8 +79,9 @@ private:
     double ordonnee = 0;
     int scoreJoueur1 = 0;
     int scoreJoueur2 = 0;
-    double ordonneeRectangle1 = 275;
-    double ordonneeRectangle2 = 275;
+    double ordonneeRectangle1 = 260;
+    double ordonneeRectangle2 = 260;
+    double longueurRectangle = 80;
     int nbSets;
     int nbPoints;
     int setEnCours = 1;

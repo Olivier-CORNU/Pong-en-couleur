@@ -39,19 +39,19 @@ void MainWindow::paintEvent(QPaintEvent *event)
     raquette1.setBrush(QBrush(QColor(221, 20, 212)));
     raquette1.setBrush(QColor(221, 20, 212));
     raquette1.setPen(QColor(221, 20, 212));
-    raquette1.drawRect(50, ordonneeRectangle1, 20, 50);
+    raquette1.drawRect(50, ordonneeRectangle1, 20, longueurRectangle);
 
     QPainter raquette2(this);
     raquette2.setBrush(QBrush(QColor(221, 20, 212)));
     raquette2.setBrush(QColor(221, 20, 212));
     raquette2.setPen(QColor(221, 20, 212));
-    raquette2.drawRect(width() - 50, ordonneeRectangle2, 20, 50);
+    raquette2.drawRect(width() - 50, ordonneeRectangle2, 20, longueurRectangle);
 
     if (avancee && point)
     {
         abscisse += abscisseTir;
 
-        if (abscisse >= width() - 70 && abscisse <= width() - 62 && ordonnee >= ordonneeRectangle2 && ordonnee <= ordonneeRectangle2 + 50)
+        if (abscisse >= width() - 70 && abscisse <= width() - 62 && ordonnee >= ordonneeRectangle2 && ordonnee <= ordonneeRectangle2 + longueurRectangle)
         {
             avancee = false;
             descente = false;
@@ -60,17 +60,14 @@ void MainWindow::paintEvent(QPaintEvent *event)
         }
 
         if (abscisse >= width())
-        {
-            //avancee = false;
             pointPourJoueur1();
-        }
     }
 
     else if (!avancee && point)
     {
         abscisse -= abscisseTir;
 
-        if (abscisse <= 70 && abscisse >= 62 && ordonnee >= ordonneeRectangle1 && ordonnee <= ordonneeRectangle1 + 50)
+        if (abscisse <= 70 && abscisse >= 62 && ordonnee >= ordonneeRectangle1 && ordonnee <= ordonneeRectangle1 + longueurRectangle)
         {
             avancee = true;
             descente = false;
@@ -79,11 +76,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         }
 
         if (abscisse <= 0)
-        {
-            //avancee = true;
-            //scoreJoueur2 += 1;
             pointPourJoueur2();
-        }
     }
 
     if (descente && point)
@@ -129,6 +122,15 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
     if (!point && !debut)
         entrePoint();
+
+    if (debut)
+    {
+        if (servicePour() == "joueur1")
+            ui->messageCentral->setText("Service pour " + joueur1->getNom());
+
+        else
+            ui->messageCentral->setText("Service pour " + joueur2->getNom());
+    }
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)        // Activer les touches du clavier
@@ -147,6 +149,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event)        // Activer les touches d
 
     if (event->key() == Qt::Key_Space)
         service();
+
+    if (event->key() == Qt::Key_Enter)
+        recommencerLaMemePartie();
+
+    if (event->key() == Qt::Key_Return)
+        recommencerLaMemePartie();
 }
 
 void MainWindow::setJoueur1(QString nom)
@@ -169,7 +177,6 @@ void MainWindow::setNbSets(int sets)
 void MainWindow::setNbPoints(int points)
 {
     nbPoints = points;
-    qDebug() << nbPoints;
 }
 
 void MainWindow::pointPourJoueur1()
@@ -208,19 +215,15 @@ void MainWindow::pointPourJoueur1()
         setEnCours++;
     }
 
-    qDebug() <<"points par set : " << nbPoints << endl << "points pour joueur1 : " << joueur1->getScore(setEnCours) << endl << "Set pour joueur1 : "  << joueur1->getSetsRemportes() << endl << "set : " << setEnCours;
     if (joueur1->getSetsRemportes() == nbSets)
-    {
         joueur1->setVictoire(true);
-        qDebug() << "1 vainqueur" << endl << endl;
-    }
 }
 
 void MainWindow::pointPourJoueur2()
 {
     point = false;
-    joueur1->setDernierPoint(true);
-    joueur2->setDernierPoint(false);
+    joueur1->setDernierPoint(false);
+    joueur2->setDernierPoint(true);
 
     for (int i = 0; i <= setEnCours; i++)
         score[i] = joueur2->getScore(i+1);
@@ -250,12 +253,8 @@ void MainWindow::pointPourJoueur2()
         setEnCours++;
     }
 
-    qDebug() <<"points par set : " << nbPoints << endl << "points pour joueur2 : " << joueur2->getScore(setEnCours) << endl << "Set pour joueur2 : "  << joueur2->getSetsRemportes() << endl << "set : " << setEnCours;
     if (joueur2->getSetsRemportes() == nbSets)
-    {
         joueur2->setVictoire(true);
-        qDebug() << "2 vainqueur" << endl << endl;
-    }
 }
 
 void MainWindow::RecommencerUnePartie_onClicked()
@@ -268,10 +267,8 @@ void MainWindow::RecommencerUnePartie_onClicked()
 QString MainWindow::servicePour()
 {
     int i;
-    //qDebug() << "Entrée dans servicePour()";
     if (debut)
     {
-        qDebug() << "Condition 1";
         i = QRandomGenerator::global()->bounded(1,3);
         if (i == 1)
         {
@@ -291,7 +288,6 @@ QString MainWindow::servicePour()
 
     else if (( nbPoints - 1) % 5 == 0 && (joueur1->getScore(setEnCours) + joueur2->getScore(setEnCours)) < 2 * nbPoints - 2)
     {
-        qDebug () << "Condition 2";
         if ((joueur1->getScore(setEnCours) + joueur2->getScore(setEnCours)) % 10 == 0 ||
             (joueur1->getScore(setEnCours) + joueur2->getScore(setEnCours)) % 10 == 1 ||
             (joueur1->getScore(setEnCours) + joueur2->getScore(setEnCours)) % 10 == 2 ||
@@ -309,18 +305,16 @@ QString MainWindow::servicePour()
 
     else
     {
-        qDebug () << "Condition 3";
         if ((joueur1->getScore(setEnCours) + joueur2->getScore(setEnCours)) % 2 == 0)
-        {qDebug () << "Condition 3.1";
-            return toss;}
+            return toss;
+
         else
         {
             if (toss == "joueur1")
-            {qDebug () << "Condition 3.2.1";
-                return "joueur2";}
+                return "joueur2";
+
             else
-            {qDebug () << "Condition 3.2.2";
-                return "joueur1";}
+                return "joueur1";
         }
     }
 }
@@ -332,7 +326,6 @@ void MainWindow::service()
     periodeEntrePoint = 0;
     ui->messageCentral->setText("");
     angleDeTir();
-    //qDebug() << "point = " << point;
     if (servicePour() == "joueur1")
     {
         abscisse = 70;
@@ -350,9 +343,6 @@ void MainWindow::service()
         descente = false;
     else
         descente = true;
-    //qDebug() << "Descente : " << descente;
-
-
 }
 
 void MainWindow::angleDeTir()
@@ -363,22 +353,14 @@ void MainWindow::angleDeTir()
     else
     {
         if (avancee)
-        {
-            angle = (( ordonnee - ordonneeRectangle1 ) / 50 * 2 * PI / 3) - PI / 3;//* 5 * PI / 3) - 5 * PI / 6;
-            qDebug () << "Coucou1";
-        }
-
+            angle = (( ordonnee - ordonneeRectangle1 ) / longueurRectangle * 2 * PI / 3) - PI / 3;
 
         else
-        {
-            angle = (( ordonnee - ordonneeRectangle2 ) / 50 * 2 * PI / 3) - PI / 3;//* 5 * PI / 3) - 5 * PI / 6;
-            qDebug () << "Coucou2";
-        }
+            angle = (( ordonnee - ordonneeRectangle2 ) / longueurRectangle * 2 * PI / 3) - PI / 3;
     }
 
     abscisseTir = 10 * cos (angle);
     ordonneeTir = -10 * sin (angle);
-    //qDebug() << "ordonnee : " << ordonnee << endl << "ordonneeRectangle1 : " << ordonneeRectangle1 << endl << "angle : " << angle << endl << "AbscisseTir : " << abscisseTir << endl << "OrdonneeTir : " << ordonneeTir;
 }
 
 void MainWindow::entrePoint()
@@ -409,7 +391,7 @@ void MainWindow::entrePoint()
             ui->messageCentral->setText("Point pour " + joueur2->getNom());
     }
 
-    if (periodeEntrePoint == 101)
+    if (periodeEntrePoint == 101 && !joueur1->getVictoire() && !joueur2->getVictoire())
     {
         if (servicePour() == "joueur1")
             ui->messageCentral->setText("Service pour " + joueur1->getNom());
@@ -418,4 +400,48 @@ void MainWindow::entrePoint()
             ui->messageCentral->setText("Service pour " + joueur2->getNom());
     }
 
+    if (periodeEntrePoint >= 101 && (joueur1->getVictoire() || joueur2->getVictoire()))
+        finDePartie();
+}
+
+void MainWindow::finDePartie()
+{
+    if (periodeEntrePoint == 101 && joueur1->getVictoire())
+        ui->messageCentral->setText("Jeu, set et match " + joueur1->getNom() + " !");
+
+    if (periodeEntrePoint == 101 && joueur2->getVictoire())
+        ui->messageCentral->setText("Jeu, set et match " + joueur2->getNom() + " !");
+
+    if (periodeEntrePoint == 151)
+        ui->messageCentral->setText("Entree pour recommencer.");
+}
+
+void MainWindow::recommencerLaMemePartie()
+{
+    debut = true;
+
+    for (int i = 0; i <= 4; i++)
+        score[i] = 0;
+
+    joueur1->setScore(score);
+    joueur2->setScore(score);
+
+    joueur1->setSetsRemportes(0);
+    joueur2->setSetsRemportes(0);
+
+    joueur1->setVictoire(false);
+    joueur2->setVictoire(false);
+
+    ui->joueur1set1label->setNum(0);
+    ui->joueur1set2label->setNum(0);
+    ui->joueur1set3label->setNum(0);
+    ui->joueur1set4label->setNum(0);
+    ui->joueur1set5label->setNum(0);
+    ui->joueur2set1label->setNum(0);
+    ui->joueur2set2label->setNum(0);
+    ui->joueur2set3label->setNum(0);
+    ui->joueur2set4label->setNum(0);
+    ui->joueur2set5label->setNum(0);
+
+    setEnCours = 1;
 }

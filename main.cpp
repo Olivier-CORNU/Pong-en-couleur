@@ -8,10 +8,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    MainWindow w;
-    //w.show();
-    Options x;
-    x.show();
+    Options w;
+    w.show();
 
     return a.exec();
 }
