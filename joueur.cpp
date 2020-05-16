@@ -50,3 +50,13 @@ void Joueur::setVictoire(bool gagne)
 {
     victoire = gagne;
 }
+
+bool Joueur::getDernierpoint()
+{
+    return (dernierPoint);
+}
+
+void Joueur::setDernierPoint(bool point)
+{
+    dernierPoint = point;
+}

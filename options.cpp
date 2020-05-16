@@ -28,10 +28,6 @@ void Options::boutonOK_onClicked()
     if (ui->groupSet->checkedButton() && ui->groupPoint->checkedButton() && (ui->groupPoint->checkedId() != -4 || ui->lineEditAutre->text() != ""))
     {
         MainWindow *partie = new MainWindow;
-        Joueur *joueur1 = new Joueur;
-        Joueur *joueur2 = new Joueur;
-        joueur1->setNom(ui->lineEditJoueur1->text());
-        joueur2->setNom(ui->lineEditJoueur2->text());
         partie->setJoueur1(ui->lineEditJoueur1->text());
         partie->setJoueur2(ui->lineEditJoueur2->text());
 

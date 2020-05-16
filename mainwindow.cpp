@@ -54,6 +54,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         if (abscisse >= width() - 70 && abscisse <= width() - 62 && ordonnee >= ordonneeRectangle2 && ordonnee <= ordonneeRectangle2 + 50)
         {
             avancee = false;
+            descente = false;
             ace = false;
             angleDeTir();
         }
@@ -72,6 +73,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         if (abscisse <= 70 && abscisse >= 62 && ordonnee >= ordonneeRectangle1 && ordonnee <= ordonneeRectangle1 + 50)
         {
             avancee = true;
+            descente = false;
             ace = false;
             angleDeTir();
         }
@@ -87,14 +89,14 @@ void MainWindow::paintEvent(QPaintEvent *event)
     if (descente && point)
     {
         ordonnee += ordonneeTir;
-        if (ordonnee >= height())
+        if (ordonnee >= height() || ordonnee <= 0)
             descente = false;
     }
 
     else if (!descente && point)
     {
         ordonnee -= ordonneeTir;
-        if (ordonnee <= 0)
+        if (ordonnee <= 0 || ordonnee >= height())
         descente = true;
     }
 
@@ -124,6 +126,9 @@ void MainWindow::paintEvent(QPaintEvent *event)
                    ui->tableauGridLayout->cellRect(1, 4).topRight().y() - 3 * ui->tableauGridLayout->verticalSpacing() / 2,
                    2 * ui->tableauGridLayout->cellRect(1, 4).bottomRight().x() - ui->tableauGridLayout->cellRect(1, 4).topRight().x() + ui->tableauGridLayout->horizontalSpacing() / 2,
                    2 * ui->tableauGridLayout->cellRect(1, 4).bottomRight().y() - ui->tableauGridLayout->cellRect(1, 4).topRight().y() - ui->tableauGridLayout->verticalSpacing() / 2);
+
+    if (!point && !debut)
+        entrePoint();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)        // Activer les touches du clavier
@@ -147,11 +152,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)        // Activer les touches d
 void MainWindow::setJoueur1(QString nom)
 {
     ui->joueur1label->setText(nom);
+    joueur1->setNom(nom);
 }
 
 void MainWindow::setJoueur2(QString nom)
 {
     ui->joueur2label->setText(nom);
+    joueur2->setNom(nom);
 }
 
 void MainWindow::setNbSets(int sets)
@@ -168,6 +175,8 @@ void MainWindow::setNbPoints(int points)
 void MainWindow::pointPourJoueur1()
 {
     point = false;
+    joueur1->setDernierPoint(true);
+    joueur2->setDernierPoint(false);
 
     for (int i = 0; i < setEnCours; i++)
         score[i] = joueur1->getScore(i+1);
@@ -205,32 +214,13 @@ void MainWindow::pointPourJoueur1()
         joueur1->setVictoire(true);
         qDebug() << "1 vainqueur" << endl << endl;
     }
-
-    if (ace)
-    {
-        int i = QRandomGenerator::global()->bounded(0, 2);
-        ui->messageCentral->setText(messageDAce[i]);
-    }
-
-    else
-    {
-        int i = QRandomGenerator::global()->bounded(0, 4);
-        ui->messageCentral->setText(messageDePoints[i]);
-    }
-    sleep_for(milliseconds(2000));
-    ui->messageCentral->setText("Point pour " + joueur1->getNom());
-    sleep_for(milliseconds(2000));
-
-    if (servicePour() == "joueur1")
-        ui->messageCentral->setText("Service pour " + joueur1->getNom());
-
-    else
-        ui->messageCentral->setText("Service pour " + joueur2->getNom());
 }
 
 void MainWindow::pointPourJoueur2()
 {
     point = false;
+    joueur1->setDernierPoint(true);
+    joueur2->setDernierPoint(false);
 
     for (int i = 0; i <= setEnCours; i++)
         score[i] = joueur2->getScore(i+1);
@@ -266,31 +256,6 @@ void MainWindow::pointPourJoueur2()
         joueur2->setVictoire(true);
         qDebug() << "2 vainqueur" << endl << endl;
     }
-
-    if (ace)
-    {
-        int i = QRandomGenerator::global()->bounded(0, 2);
-        ui->messageCentral->setText(messageDAce[i]);
-        qDebug () << "ace" << messageDAce[i];
-    }
-
-    else
-    {
-        int i = QRandomGenerator::global()->bounded(0, 5);
-        ui->messageCentral->setText(messageDePoints[i]);
-        qDebug () << "pas ace" << messageDePoints[i];
-    }
-
-
-    sleep_for (milliseconds(2000));//QTest::qWait(2000);
-    ui->messageCentral->setText("Point pour " + joueur2->getNom());
-    sleep_for(milliseconds(2000));//QTest::qWait(2000);
-
-    if (servicePour() == "joueur1")
-        ui->messageCentral->setText("Service pour " + joueur1->getNom());
-
-    else
-        ui->messageCentral->setText("Service pour " + joueur2->getNom());
 }
 
 void MainWindow::RecommencerUnePartie_onClicked()
@@ -364,6 +329,9 @@ void MainWindow::service()
 {
     point = true;
     ace = true;
+    periodeEntrePoint = 0;
+    ui->messageCentral->setText("");
+    angleDeTir();
     //qDebug() << "point = " << point;
     if (servicePour() == "joueur1")
     {
@@ -383,16 +351,71 @@ void MainWindow::service()
     else
         descente = true;
     //qDebug() << "Descente : " << descente;
+
+
 }
 
 void MainWindow::angleDeTir()
 {
-    if (avancee)
-        angle = (( ordonnee - ordonneeRectangle1 ) / 275 * 5 * PI / 3) - 5 * PI / 6;
+    if (ace)
+        angle = QRandomGenerator::global()->bounded(2 * PI / 3) - PI / 3;
 
     else
-        angle = (( ordonnee - ordonneeRectangle2 ) / 275 * 5 * PI / 3) - 5 * PI / 6;
+    {
+        if (avancee)
+        {
+            angle = (( ordonnee - ordonneeRectangle1 ) / 50 * 2 * PI / 3) - PI / 3;//* 5 * PI / 3) - 5 * PI / 6;
+            qDebug () << "Coucou1";
+        }
+
+
+        else
+        {
+            angle = (( ordonnee - ordonneeRectangle2 ) / 50 * 2 * PI / 3) - PI / 3;//* 5 * PI / 3) - 5 * PI / 6;
+            qDebug () << "Coucou2";
+        }
+    }
 
     abscisseTir = 10 * cos (angle);
     ordonneeTir = -10 * sin (angle);
+    //qDebug() << "ordonnee : " << ordonnee << endl << "ordonneeRectangle1 : " << ordonneeRectangle1 << endl << "angle : " << angle << endl << "AbscisseTir : " << abscisseTir << endl << "OrdonneeTir : " << ordonneeTir;
+}
+
+void MainWindow::entrePoint()
+{
+    periodeEntrePoint++;
+
+    if (periodeEntrePoint == 1)
+    {
+        if (ace)
+        {
+            int i = QRandomGenerator::global()->bounded(0, 2);
+            ui->messageCentral->setText(messageDAce[i]);
+        }
+
+        else
+        {
+            int i = QRandomGenerator::global()->bounded(0, 4);
+            ui->messageCentral->setText(messageDePoints[i]);
+        }
+    }
+
+    if (periodeEntrePoint == 51)
+    {
+        if (joueur1->getDernierpoint() && !joueur2->getDernierpoint())
+            ui->messageCentral->setText("Point pour " + joueur1->getNom());
+
+        else
+            ui->messageCentral->setText("Point pour " + joueur2->getNom());
+    }
+
+    if (periodeEntrePoint == 101)
+    {
+        if (servicePour() == "joueur1")
+            ui->messageCentral->setText("Service pour " + joueur1->getNom());
+
+        else
+            ui->messageCentral->setText("Service pour " + joueur2->getNom());
+    }
+
 }

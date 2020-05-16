@@ -39,6 +39,7 @@ public:
     void pointPourJoueur2();
     void service();
     void angleDeTir();
+    void entrePoint();
     QString servicePour();
 
 public slots:
@@ -70,19 +71,20 @@ private:
     bool point = false;
     bool debut = true;
     double angle;
-    int abscisse = 0;
-    int ordonnee = 0;
     double abscisseTir;
     double ordonneeTir;
+    int abscisse = 0;
+    double ordonnee = 0;
     int scoreJoueur1 = 0;
     int scoreJoueur2 = 0;
-    int ordonneeRectangle1 = 275;
-    int ordonneeRectangle2 = 275;
+    double ordonneeRectangle1 = 275;
+    double ordonneeRectangle2 = 275;
     int nbSets;
     int nbPoints;
     int setEnCours = 1;
     int score[5] = {0,0,0,0,0};
     int set[2] = {0,0};
+    int periodeEntrePoint;
     void paintEvent(QPaintEvent *event);
     void keyPressEvent(QKeyEvent *event);
 

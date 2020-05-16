@@ -20,12 +20,15 @@ public:
     void setSetsRemportes(int nouveauxSets);
     bool getVictoire();
     void setVictoire(bool gagne);
+    bool getDernierpoint();
+    void setDernierPoint(bool point);
 
 private:
     QString nom;
     int score[5] = {0,0,0,0,0};
     int setsRemportes = 0;
     bool victoire = false;
+    bool dernierPoint = false;
 
 };
 
