@@ -318,6 +318,8 @@
      <string>&amp;Menu</string>
     </property>
     <addaction name="action_Recommencer_une_partie"/>
+    <addaction name="action_Regles_du_jeu"/>
+    <addaction name="action_APropos"/>
     <addaction name="action_Quitter"/>
    </widget>
    <addaction name="menu_Menu"/>
@@ -331,6 +333,16 @@
   <action name="action_Quitter">
    <property name="text">
     <string>&amp;Quitter</string>
+   </property>
+  </action>
+  <action name="action_Regles_du_jeu">
+   <property name="text">
+    <string>Règles du &amp;jeu</string>
+   </property>
+  </action>
+  <action name="action_APropos">
+   <property name="text">
+    <string>A &amp;Propos</string>
    </property>
   </action>
  </widget>

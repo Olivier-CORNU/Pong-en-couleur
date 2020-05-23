@@ -3,6 +3,8 @@
 
 #include "options.h"
 #include "joueur.h"
+#include "reglesdujeu.h"
+#include "apropos.h"
 
 #include <QMainWindow>
 #include <QPainter>
@@ -46,6 +48,8 @@ public:
 
 public slots:
     void RecommencerUnePartie_onClicked();
+    void ReglesDuJeu_onClicked();
+    void APropos_onClicked();
 
 private:
     Ui::MainWindow *ui;
@@ -82,6 +86,7 @@ private:
     double ordonneeRectangle1 = 260;
     double ordonneeRectangle2 = 260;
     double longueurRectangle = 80;
+    double longueurBoule = 20;
     int nbSets;
     int nbPoints;
     int setEnCours = 1;

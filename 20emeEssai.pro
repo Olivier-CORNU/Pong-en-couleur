@@ -16,19 +16,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    apropos.cpp \
     main.cpp \
     mainwindow.cpp \
     options.cpp \
-    joueur.cpp
+    joueur.cpp \
+    reglesdujeu.cpp
 
 HEADERS += \
+    apropos.h \
     mainwindow.h \
     options.h \
-    joueur.h
+    joueur.h \
+    reglesdujeu.h
 
 FORMS += \
+    apropos.ui \
     mainwindow.ui \
-    options.ui
+    options.ui \
+    reglesdujeu.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
