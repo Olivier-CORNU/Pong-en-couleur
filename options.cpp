@@ -7,7 +7,7 @@ Options::Options(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QIntValidator *validateur = new QIntValidator;
+    QIntValidator *validateur = new QIntValidator;          // L'option pour choisir le nombre de points d'une partie n'autorise qu'un nombre entre 1 et 99
     validateur->setRange(1, 99);
     ui->lineEditAutre->setValidator(validateur);
 
@@ -23,8 +23,8 @@ Options::~Options()
 
 
 
-void Options::boutonOK_onClicked()
-{
+void Options::boutonOK_onClicked()          // Slot du bouton OK, la partie est créée, le nombre de sets et le nombe de points par sets sont enregistrés.
+{                                           // Les joueurs seront créés plus tard, leur nom est stocké dans la table des scores en attendant.
     if (ui->groupSet->checkedButton() && ui->groupPoint->checkedButton() && (ui->groupPoint->checkedId() != -4 || ui->lineEditAutre->text() != ""))
     {
         MainWindow *partie = new MainWindow;
@@ -54,13 +54,13 @@ void Options::boutonOK_onClicked()
     }
 }
 
-void Options::boutonAnnuler_onClicked()
+void Options::boutonAnnuler_onClicked()         // Slot du bouton annuler
 {
     this->close();
 }
 
-void Options::lineEditAutre_onToggled(bool checked)
-{
+void Options::lineEditAutre_onToggled(bool checked)         // Slot du bouton autre dans le menu nombre de points
+{                                                           // il rend le lineedit disponible pour écrire le nombre de points
     if (checked)
         ui->lineEditAutre->setEnabled(true);
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,6 +27,12 @@ Pour descendre -&gt; touche q
 Joueur 2:
 Pour monter -&gt; touche haut
 Pour descendre -&gt; touche bas
+
+Les sets se gagnent en atteignant le nombre de points du sets avec 2 points d'écarts.
+
+Pour les sets en 11, 21, 31 ... changement de serveurs tous les 5 points jusqu'à égalité 10-10, 20-20, 30-30 ... puis changement de serveurs tous les points.
+
+Le vainqueur est le premier à remporter une majorité de sets.
 
 Pour servir : espace
 

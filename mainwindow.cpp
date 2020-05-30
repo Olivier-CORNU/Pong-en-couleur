@@ -431,7 +431,7 @@ void MainWindow::finDePartie()          // Fonction qui annonce la fin de partie
         ui->messageCentral->setText("Entree pour recommencer.");
 }
 
-void MainWindow::recommencerLaMemePartie()          // Fonction qui remet tout à 0 pour recommencer la meême partie
+void MainWindow::recommencerLaMemePartie()          // Fonction qui remet tout à 0 pour recommencer la même partie
 {
     debut = true;
 
