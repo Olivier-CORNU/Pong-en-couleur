@@ -126,7 +126,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     if (!point && !debut)           // A la fin d'un point, la fonction entrepoint() est lancée
         entrePoint();
 
-    if (debut)          // Si la partie n'a pas commencé
+    if (debut && !tossRealise)          // Si la partie n'a pas commencé et que le toss n'a pas encore été réalisé
     {
         if (servicePour() == "joueur1")
             ui->messageCentral->setText("Service pour " + joueur1->getNom());
@@ -288,14 +288,14 @@ QString MainWindow::servicePour()           // Fonction pour désigner qui doit 
         if (i == 1)
         {
             toss = "joueur1";
-            debut = false;
+            tossRealise = true;
             return "joueur1";
 
         }
         else
         {
             toss = "joueur2";
-            debut = false;
+            tossRealise = true;
             return "joueur2";
         }
 
@@ -338,6 +338,7 @@ void MainWindow::service()          // Fonction du service (appelé par le key_e
 {
     point = true;           // Nous sommes dans la séquence d'un point
     ace = true;         // Tant que la balle n'a pas été retourné, nous la sommes dans la situation de faire un ace
+    debut = false;          // La partie a commencé
     periodeEntrePoint = 0;          // le compteur de l'entrepoint est remis à 0 pour l'entrepoint suivant
     ui->messageCentral->setText("");            // l'écran central est effacé
     angleDeTir();

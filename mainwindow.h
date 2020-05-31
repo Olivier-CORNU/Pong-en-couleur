@@ -76,6 +76,7 @@ private:
     bool ace = true;
     bool point = false;
     bool debut = true;
+    bool tossRealise = false;
     double angle;
     double abscisseTir;
     double ordonneeTir;
